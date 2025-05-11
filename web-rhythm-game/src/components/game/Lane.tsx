@@ -14,9 +14,10 @@ const Lane: React.FC<LaneProps> = ({ lane, notes, currentTime, isActive, hitFeed
   const laneRef = useRef<HTMLDivElement>(null);
 
   const laneHeight = 600;
-  const noteSize = 60;
-  const hitPosition = laneHeight - noteSize;
-  const hitZoneSize = 100;
+  const noteWidth = 80;
+  const noteHeight = 30;
+  const hitPosition = laneHeight - noteHeight;
+  const hitZoneSize = noteHeight;
   
   const visibleNotes = notes.filter(note => {
     const timeUntilHit = note.time - currentTime;
@@ -40,7 +41,7 @@ const Lane: React.FC<LaneProps> = ({ lane, notes, currentTime, isActive, hitFeed
     >
       {visibleNotes.map((note) => {
         const timeUntilHit = note.time - currentTime;
-        const notePosition = hitPosition - ((3000 - timeUntilHit) / 3000) * (laneHeight - noteSize);
+        const notePosition = hitPosition - ((3000 - timeUntilHit) / 3000) * (laneHeight - noteHeight);
         
         return (
           <div
@@ -48,15 +49,16 @@ const Lane: React.FC<LaneProps> = ({ lane, notes, currentTime, isActive, hitFeed
             className="game-note"
             style={{
               position: 'absolute',
-              width: `${noteSize}px`,
-              height: `${noteSize}px`,
-              borderRadius: '50%',
+              width: `${noteWidth}px`,
+              height: `${noteHeight}px`,
+              borderRadius: '5px',
               backgroundColor: LANE_COLORS[lane],
               bottom: `${notePosition}px`,
-              left: '20px',
+              left: '50%',
               transform: 'translateX(-50%)',
               opacity: note.hit || note.missed ? 0 : 1,
-              transition: 'opacity 0.2s ease'
+              transition: 'opacity 0.2s ease',
+              boxShadow: `0 0 10px ${LANE_COLORS[lane]}80`
             }}
           />
         );
@@ -66,11 +68,15 @@ const Lane: React.FC<LaneProps> = ({ lane, notes, currentTime, isActive, hitFeed
         className="hit-zone"
         style={{
           position: 'absolute',
-          width: '100%',
+          width: `${noteWidth}px`,
           height: `${hitZoneSize}px`,
           bottom: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
           backgroundColor: isActive ? `${LANE_COLORS[lane]}40` : 'rgba(255, 255, 255, 0.1)',
-          borderTop: `2px solid ${LANE_COLORS[lane]}`,
+          borderRadius: '5px',
+          border: `2px solid ${LANE_COLORS[lane]}`,
+          boxShadow: `0 0 10px ${LANE_COLORS[lane]}80`,
           transition: 'background-color 0.1s ease'
         }}
       />
